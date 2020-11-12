@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1083317945619",
+    "firebase_url": "https://uber-48deb.firebaseio.com",
+    "project_id": "uber-48deb",
+    "storage_bucket": "uber-48deb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083317945619:android:d47d83af38baa4cc5f46e6",
+        "android_client_info": {
+          "package_name": "br.natanael.android.uber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1083317945619-7hcq5ugnljbjse0qi73evk4t6vqs3i97.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.natanael.android.uber",
+            "certificate_hash": "d67204a9d20f0dcf9b33eaf54df140347616dbad"
+          }
+        },
+        {
+          "client_id": "1083317945619-keja0hnqid1j3fpqt1dj7f2o5ec9a0fn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcgvFvM9BsFou3f-QWY44T3CgjgkAGn8A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1083317945619-keja0hnqid1j3fpqt1dj7f2o5ec9a0fn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
