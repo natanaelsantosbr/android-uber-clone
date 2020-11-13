@@ -41,6 +41,7 @@
             android:layout_marginRight="4dp"
             android:layout_weight="1"
             android:background="@color/btnLogin"
+            android:onClick="abrirTelaDeLogin"
             android:text="Entrar"
             android:textColor="@android:color/white" />
 
@@ -51,6 +52,7 @@
             android:layout_marginLeft="4dp"
             android:layout_weight="1"
             android:background="@color/btnCadastrar"
+            android:onClick="abrirTelaDeCadastro"
             android:text="Cadastrar"
             android:textColor="@android:color/white" />
     </LinearLayout>
