@@ -24,6 +24,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void abrirTelaDeCadastro(View view){
-        startActivity(new Intent(this, LoginActivity.class));
+        startActivity(new Intent(this, CadastrarActivity.class));
     }
 }
