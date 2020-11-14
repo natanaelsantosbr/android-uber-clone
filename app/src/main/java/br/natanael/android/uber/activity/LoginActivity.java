@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,7 @@ import br.natanael.android.uber.model.Usuario;
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText txtLoginEmail, txtLoginSenha;
+    private ProgressBar progressBarLogin;
     private FirebaseAuth firebaseAuth;
 
     @Override
@@ -39,21 +41,25 @@ public class LoginActivity extends AppCompatActivity {
 
     private void inicializarVariaveis() {
         firebaseAuth = ConfiguracaoFirebase.getFirebaseAuth();
+        progressBarLogin.setVisibility(View.INVISIBLE);
     }
 
     private void inicializarComponentes() {
         txtLoginEmail= findViewById(R.id.txtLoginEmail);
         txtLoginSenha = findViewById(R.id.txtLoginSenha);
+        progressBarLogin =findViewById(R.id.progressBarLogin);
+
     }
 
     public void efetuarLogin(View view){
         String email = txtLoginEmail.getText().toString();
         String senha = txtLoginSenha.getText().toString();
 
-        if(email == null && senha == null)
+        if(email != null && senha != null)
         {
             if(!email.isEmpty() && !senha.isEmpty())
             {
+                progressBarLogin.setVisibility(View.VISIBLE);
                 firebaseAuth.signInWithEmailAndPassword(email, senha).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -84,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             Toast.makeText(LoginActivity.this, excecao, Toast.LENGTH_SHORT).show();
                         }
+                        progressBarLogin.setVisibility(View.INVISIBLE);
 
                     }
                 });

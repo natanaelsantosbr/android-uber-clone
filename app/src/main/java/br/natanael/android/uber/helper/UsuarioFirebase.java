@@ -74,8 +74,9 @@ public class UsuarioFirebase {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Usuario usuario = snapshot.getValue(Usuario.class);
+                    String tipo = usuario.getTipo();
 
-                    if(usuario.getTipo() == "M")
+                    if(tipo.equals("M"))
                         activity.startActivity(new Intent(activity, RequisicoesActivity.class));
                     else
                         activity.startActivity(new Intent(activity, MapsActivity.class));
@@ -88,4 +89,6 @@ public class UsuarioFirebase {
             });
         }
     }
+
+
 }

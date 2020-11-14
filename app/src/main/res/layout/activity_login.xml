@@ -46,6 +46,12 @@
             android:onClick="efetuarLogin"
             android:text="ACESSAR"
             android:textColor="#FFFFFF" />
+
+        <ProgressBar
+            android:id="@+id/progressBarLogin"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>
