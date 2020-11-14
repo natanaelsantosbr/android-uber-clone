@@ -121,11 +121,6 @@ public class CadastrarActivity extends AppCompatActivity {
         {
             Toast.makeText(this, "Todos os campos são obrigatórios!", Toast.LENGTH_SHORT).show();
         }
-        
-
-
-
-
     }
 
     private void inicializarVariaveis() {
@@ -136,9 +131,9 @@ public class CadastrarActivity extends AppCompatActivity {
     }
 
     private void inicializarComponentes() {
-        txtNome = findViewById(R.id.txtNome);
-        txtEmail = findViewById(R.id.txtEmail);
-        txtSenha = findViewById(R.id.txtSenha);
+        txtNome = findViewById(R.id.txtCadastrarNome);
+        txtEmail = findViewById(R.id.txtCadastrarEmail);
+        txtSenha = findViewById(R.id.txtCadastrarSenha);
         switchTipo = findViewById(R.id.switchTipo);
         progressBarCadastro = findViewById(R.id.progressBarCadastro);
     }
