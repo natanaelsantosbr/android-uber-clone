@@ -84,7 +84,7 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
                         .title("Meu local")
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.usuario)));
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meuLocal, 15));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meuLocal, 20));
             }
 
             @Override
@@ -107,8 +107,8 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    10000,
-                    10,
+                    0,
+                    0,
                     locationListener
             );
         }
