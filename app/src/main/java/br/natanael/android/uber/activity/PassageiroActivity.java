@@ -35,9 +35,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,6 +55,10 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
     private LocationListener locationListener;
 
     private EditText editDestino;
+    private TextView txtVelocimetro;
+
+    double currentSpeed,kmphSpeed;
+    private double speed = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,7 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
         firebaseAuth = ConfiguracaoFirebase.getFirebaseAuth();
 
         editDestino = findViewById(R.id.editDestino);
+        txtVelocimetro = findViewById(R.id.txtVelocimetro);
 
         setSupportActionBar(toolbar);
 
@@ -85,12 +92,24 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
         recuperarLocalizacaoUsuario();
     }
 
+    public static double round(double unrounded, int precision, int roundingMode) {
+        BigDecimal bd = new BigDecimal(unrounded);
+        BigDecimal rounded = bd.setScale(precision, roundingMode);
+        return rounded.doubleValue();
+    }
+
     private void recuperarLocalizacaoUsuario() {
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+
+                speed = location.getSpeed();
+                currentSpeed = round(speed,3, BigDecimal.ROUND_HALF_UP);
+                kmphSpeed = round((currentSpeed*3.6),3,BigDecimal.ROUND_HALF_UP);
+
+                txtVelocimetro.setText(kmphSpeed+" km/h");
 
                 //recuperar latitude e longitude
                 double latitude = location.getLatitude();
@@ -104,7 +123,7 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
                         .title("Meu local")
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.usuario)));
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meuLocal, 20));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(meuLocal, 18));
             }
 
             @Override
@@ -127,8 +146,8 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    10000,
-                    10,
+                    0,
+                    0,
                     locationListener
             );
         }
