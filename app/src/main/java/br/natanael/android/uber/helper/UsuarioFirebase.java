@@ -20,9 +20,26 @@ import br.natanael.android.uber.activity.RequisicoesActivity;
 import br.natanael.android.uber.model.Usuario;
 
 public class UsuarioFirebase {
+
     public static FirebaseUser getUsuarioAtual() {
         return ConfiguracaoFirebase.getFirebaseAuth().getCurrentUser();
     }
+
+    public static Usuario getDadosUsuariosLogado() {
+        FirebaseUser user =  ConfiguracaoFirebase.getFirebaseAuth().getCurrentUser();
+
+        Usuario usuario = new Usuario();
+        usuario.setId(user.getUid());
+        usuario.setEmail(user.getEmail());
+        usuario.setNome(user.getDisplayName());
+
+
+
+        return usuario;
+
+    }
+
+
     public static boolean atualizarNome(String nome) {
         try
         {

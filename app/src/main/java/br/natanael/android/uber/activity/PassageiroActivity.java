@@ -46,7 +46,10 @@ import java.util.Locale;
 
 import br.natanael.android.uber.R;
 import br.natanael.android.uber.helper.ConfiguracaoFirebase;
+import br.natanael.android.uber.helper.UsuarioFirebase;
 import br.natanael.android.uber.model.Destino;
+import br.natanael.android.uber.model.Requisicao;
+import br.natanael.android.uber.model.Usuario;
 
 public class PassageiroActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -60,6 +63,8 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
 
     double currentSpeed,kmphSpeed;
     private double speed = 0.0;
+
+    private LatLng meuLocal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +121,7 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
                 //recuperar latitude e longitude
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
-                LatLng meuLocal = new LatLng(latitude, longitude);
+                meuLocal = new LatLng(latitude, longitude);
 
                 mMap.clear();
 
@@ -243,7 +248,16 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void salvarRequsicao(Destino destino) {
+        Requisicao requisicao = new Requisicao();
+        requisicao.setDestino(destino);
 
+        Usuario passageiro = UsuarioFirebase.getDadosUsuariosLogado();
+        passageiro.setLatitude(String.valueOf(meuLocal.latitude));
+        passageiro.setLongitude(String.valueOf(meuLocal.longitude));
+        requisicao.setPassageiro(passageiro);
+        requisicao.setStatus(Requisicao.STATUS_AGUARDANDO);
+
+        requisicao.salvar();
     }
 
     private Address recuperarDestino(String destino) {

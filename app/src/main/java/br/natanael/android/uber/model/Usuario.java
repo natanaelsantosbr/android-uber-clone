@@ -13,6 +13,25 @@ public class Usuario {
     private String tipo;
 
 
+    private String Latitude;
+    private String longitude;
+
+    public String getLatitude() {
+        return Latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        Latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
     public Usuario() {
     }
 
