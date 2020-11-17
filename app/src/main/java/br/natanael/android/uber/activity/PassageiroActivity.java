@@ -187,7 +187,7 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
 
                 if(addressDestino != null)
                 {
-                    Destino destino = new Destino();
+                    final Destino destino = new Destino();
                     destino.setCidade(addressDestino.getSubAdminArea());
                     destino.setCep(addressDestino.getPostalCode());
                     destino.setBairro(addressDestino.getSubLocality());
@@ -209,6 +209,9 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
                             .setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    salvarRequsicao(destino);
+
+
 
                                 }
                             }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -236,6 +239,10 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
             Toast.makeText(this, "Informe o endereço do destino", Toast.LENGTH_SHORT).show();
         }
 
+
+    }
+
+    private void salvarRequsicao(Destino destino) {
 
     }
 
