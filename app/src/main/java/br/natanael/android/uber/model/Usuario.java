@@ -2,9 +2,11 @@ package br.natanael.android.uber.model;
 
 import com.google.firebase.database.DatabaseReference;
 
+import java.io.Serializable;
+
 import br.natanael.android.uber.helper.ConfiguracaoFirebase;
 
-public class Usuario {
+public class Usuario implements Serializable {
 
     private String id;
     private String nome;

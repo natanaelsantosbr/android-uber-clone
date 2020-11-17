@@ -6,13 +6,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,12 +32,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.natanael.android.uber.R;
 import br.natanael.android.uber.adapter.RequisicaoAdapter;
 import br.natanael.android.uber.helper.ConfiguracaoFirebase;
+import br.natanael.android.uber.helper.RecyclerItemClickListener;
 import br.natanael.android.uber.helper.UsuarioFirebase;
 import br.natanael.android.uber.model.Requisicao;
 import br.natanael.android.uber.model.Usuario;
@@ -40,6 +55,9 @@ public class RequisicoesActivity extends AppCompatActivity {
     private List<Requisicao> listaDeRequisicoes = new ArrayList<>();
     private RequisicaoAdapter adapter;
     private Usuario motorista;
+
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +83,72 @@ public class RequisicoesActivity extends AppCompatActivity {
         recyclerRequisicoes.setHasFixedSize(true);
         recyclerRequisicoes.setAdapter(adapter);
 
+        recyclerRequisicoes.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerRequisicoes, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Requisicao requisicao = listaDeRequisicoes.get(position);
+                Intent i = new Intent(RequisicoesActivity.this, CorridaActivity.class);
+                i.putExtra("idRequisicao", requisicao.getId());
+                i.putExtra("motorista", motorista);
+                startActivity(i);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
+
         recuperarRequisicoes();
     }
+    private void recuperarLocalizacaoUsuario() {
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+                //recuperar latitude e longitude
+                String latitude = String.valueOf(location.getLatitude());
+                String longitude = String.valueOf(location.getLongitude());
+
+                motorista.setLatitude(latitude);
+                motorista.setLongitude(longitude);
+                locationManager.removeUpdates(locationListener);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        //Solicitar atualizacoes de localizacao
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    0,
+                    0,
+                    locationListener
+            );
+        }
+    }
     private void recuperarRequisicoes() {
         final DatabaseReference requisicoes = firebaseRef.child("requisicoes");
 

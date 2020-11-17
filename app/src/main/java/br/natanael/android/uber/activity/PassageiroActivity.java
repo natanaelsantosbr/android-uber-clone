@@ -142,7 +142,7 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
     private void inicializarComponentes() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Iniciar uma viagem");
-
+        setSupportActionBar(toolbar);
         firebaseAuth = ConfiguracaoFirebase.getFirebaseAuth();
 
         editDestino = findViewById(R.id.editDestino);
@@ -150,7 +150,7 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
 
         linearLayoutDestino = findViewById(R.id.linearLayoutDestino);
         buttonChamarUber = findViewById(R.id.buttonChamarUber);
-        setSupportActionBar(toolbar);
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
