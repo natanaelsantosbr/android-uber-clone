@@ -158,6 +158,7 @@ public class RequisicoesActivity extends AppCompatActivity {
         requisicaoPesquisa.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 if(snapshot.getChildrenCount() > 0){
                     textResultado.setVisibility(View.GONE);
                     recyclerRequisicoes.setVisibility(View.VISIBLE);
@@ -168,6 +169,7 @@ public class RequisicoesActivity extends AppCompatActivity {
                     recyclerRequisicoes.setVisibility(View.GONE);
                 }
 
+                listaDeRequisicoes.clear();
                 for (DataSnapshot ds: snapshot.getChildren())
                 {
                     Requisicao requisicao = ds.getValue(Requisicao.class);
