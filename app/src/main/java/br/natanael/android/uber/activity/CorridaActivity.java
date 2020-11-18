@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -58,6 +59,8 @@ public class CorridaActivity extends AppCompatActivity implements OnMapReadyCall
     private Marker marcadorPassageiro;
     private String statusRequisicao;
     private boolean requisicaoAtiva;
+
+    private FloatingActionButton fabRota;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +132,7 @@ public class CorridaActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void requisicaoACaminho() {
         buttonAceitarCorrida.setText("A Caminho do passageiro");
+        fabRota.setVisibility(View.VISIBLE);
         
         adicionarMarcadorMotorista(localMotorista,  motorista.getNome());
 
@@ -178,6 +182,7 @@ public class CorridaActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void requisicaoAguardando() {
         buttonAceitarCorrida.setText("Aceitar Corrida");
+        fabRota.setVisibility(View.GONE);
     }
 
     private void inicializarComponentes() {
@@ -192,6 +197,46 @@ public class CorridaActivity extends AppCompatActivity implements OnMapReadyCall
 
         firebaseRef = ConfiguracaoFirebase.getDatabaseReference();
         buttonAceitarCorrida = findViewById(R.id.buttonAceitarCorrida);
+
+        fabRota = findViewById(R.id.fabRota);
+        fabRota.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String status = statusRequisicao;
+
+                if(status != null)
+                {
+                    if(!status.isEmpty())
+                    {
+                        String lat = "";
+                        String lon = "";
+
+                        switch (status)
+                        {
+                            case Requisicao.STATUS_A_CAMINHO:
+                                lat = String.valueOf(localPassageiro.latitude);
+                                lon = String.valueOf(localMotorista.longitude);
+                                break;
+                            case Requisicao.STATUS_VIAGEM:
+                                /*lat = String.valueOf(destino);
+                                lon = String.valueOf(localMotorista.longitude);*/
+                                break;
+
+                        }
+
+                        //Abrir rota
+                        String latLong = lat + "," + lon;
+                        Uri uri = Uri.parse("google.navigation:q=" + latLong + "&mode=d");
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+
+
+
+                    }
+                }
+            }
+        });
 
 
     }
