@@ -14,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,7 +66,49 @@ public class RequisicoesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_requisicoes);
 
         inicializarComponentes();
+
+        recuperarLocalizacaoUsuario();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        verificaStatusRequisicao();
+    }
+
+    private void verificaStatusRequisicao() {
+        Usuario usuarioLogado = UsuarioFirebase.getDadosUsuariosLogado();
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getDatabaseReference();
+
+        DatabaseReference requisicoes = firebaseRef.child("requisicoes");
+
+        Query requisicoesPesquisa = requisicoes.orderByChild("motorista/id")
+                .equalTo(usuarioLogado.getId());
+
+        //Uma unica pesquisa
+        requisicoesPesquisa.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren())
+                {
+                    Requisicao requisicao = ds.getValue(Requisicao.class);
+
+                    if(requisicao.getStatus().equals(Requisicao.STATUS_A_CAMINHO) || requisicao.getStatus().equals(Requisicao.STATUS_VIAGEM))
+                    {
+                        abrirTelaCorrida(requisicao, true);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
 
     private void inicializarComponentes() {
         getSupportActionBar().setTitle("Requisições");
@@ -87,10 +130,7 @@ public class RequisicoesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, int position) {
                 Requisicao requisicao = listaDeRequisicoes.get(position);
-                Intent i = new Intent(RequisicoesActivity.this, CorridaActivity.class);
-                i.putExtra("idRequisicao", requisicao.getId());
-                i.putExtra("motorista", motorista);
-                startActivity(i);
+                abrirTelaCorrida(requisicao, false);
             }
 
             @Override
@@ -106,6 +146,15 @@ public class RequisicoesActivity extends AppCompatActivity {
 
         recuperarRequisicoes();
     }
+
+    private void abrirTelaCorrida(Requisicao requisicao, boolean requisicaoAtiva) {
+        Intent i = new Intent(RequisicoesActivity.this, CorridaActivity.class);
+        i.putExtra("idRequisicao", requisicao.getId());
+        i.putExtra("motorista", motorista);
+        i.putExtra("requisicaoAtiva", requisicaoAtiva);
+        startActivity(i);
+    }
+
     private void recuperarLocalizacaoUsuario() {
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
