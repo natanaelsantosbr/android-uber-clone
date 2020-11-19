@@ -95,7 +95,9 @@ public class RequisicoesActivity extends AppCompatActivity {
 
                     if(requisicao.getStatus().equals(Requisicao.STATUS_A_CAMINHO) || requisicao.getStatus().equals(Requisicao.STATUS_VIAGEM))
                     {
-                        abrirTelaCorrida(requisicao, true);
+                        motorista = requisicao.getMotorista();
+
+                        abrirTelaCorrida(requisicao, motorista, true);
                     }
                 }
             }
@@ -126,11 +128,15 @@ public class RequisicoesActivity extends AppCompatActivity {
         recyclerRequisicoes.setHasFixedSize(true);
         recyclerRequisicoes.setAdapter(adapter);
 
+        recuperarRequisicoes();
+    }
+
+    private void adicionarEventoRecyclerView() {
         recyclerRequisicoes.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerRequisicoes, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Requisicao requisicao = listaDeRequisicoes.get(position);
-                abrirTelaCorrida(requisicao, false);
+                abrirTelaCorrida(requisicao, motorista, false);
             }
 
             @Override
@@ -143,11 +149,9 @@ public class RequisicoesActivity extends AppCompatActivity {
 
             }
         }));
-
-        recuperarRequisicoes();
     }
 
-    private void abrirTelaCorrida(Requisicao requisicao, boolean requisicaoAtiva) {
+    private void abrirTelaCorrida(Requisicao requisicao, Usuario motorista, boolean requisicaoAtiva) {
         Intent i = new Intent(RequisicoesActivity.this, CorridaActivity.class);
         i.putExtra("idRequisicao", requisicao.getId());
         i.putExtra("motorista", motorista);
@@ -168,6 +172,7 @@ public class RequisicoesActivity extends AppCompatActivity {
 
                 motorista.setLatitude(latitude);
                 motorista.setLongitude(longitude);
+                adicionarEventoRecyclerView();
                 locationManager.removeUpdates(locationListener);
                 adapter.notifyDataSetChanged();
             }

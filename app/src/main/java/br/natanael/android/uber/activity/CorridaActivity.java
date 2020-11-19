@@ -38,6 +38,7 @@ import java.math.BigDecimal;
 
 import br.natanael.android.uber.R;
 import br.natanael.android.uber.helper.ConfiguracaoFirebase;
+import br.natanael.android.uber.model.Destino;
 import br.natanael.android.uber.model.Requisicao;
 import br.natanael.android.uber.model.Usuario;
 
@@ -57,10 +58,12 @@ public class CorridaActivity extends AppCompatActivity implements OnMapReadyCall
 
     private Marker marcadorMotorista;
     private Marker marcadorPassageiro;
+    private Marker marcadorDestino;
     private String statusRequisicao;
     private boolean requisicaoAtiva;
 
     private FloatingActionButton fabRota;
+    private Destino destino;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,7 @@ public class CorridaActivity extends AppCompatActivity implements OnMapReadyCall
                     localPassageiro = new LatLng(Double.parseDouble(passageiro.getLatitude()) , Double.parseDouble(passageiro.getLongitude()));
 
                     statusRequisicao = requisicao.getStatus();
+                    destino = requisicao.getDestino();
                     alterarInterfaceRequisicao(statusRequisicao);
                 }
 
@@ -127,7 +131,25 @@ public class CorridaActivity extends AppCompatActivity implements OnMapReadyCall
             case Requisicao.STATUS_A_CAMINHO:
                 requisicaoACaminho();
                 break;
+            case Requisicao.STATUS_VIAGEM:
+                requisicaoViagem();
         }
+    }
+
+    private void requisicaoViagem() {
+        fabRota.setVisibility(View.VISIBLE);
+        buttonAceitarCorrida.setText("A Caminho do destino");
+
+        adicionarMarcadorMotorista(localMotorista, motorista.getNome());
+
+
+        LatLng localDestino = new LatLng(Double.parseDouble(destino.getLatitude()), Double.parseDouble(destino.getLongitude()));
+        adicionarMarcadorDestino(localDestino, "Destino");
+
+        centralizarDoisMarcadores(marcadorMotorista, marcadorDestino);
+
+
+
     }
 
     private void requisicaoACaminho() {
@@ -167,6 +189,20 @@ public class CorridaActivity extends AppCompatActivity implements OnMapReadyCall
                 .position(localizacao)
                 .title(titulo)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.carro)));
+    }
+
+    private void adicionarMarcadorDestino(LatLng localizacao, String titulo)
+    {
+        if(marcadorPassageiro != null)
+            marcadorPassageiro.remove();
+
+        if(marcadorDestino != null)
+            marcadorDestino.remove();
+
+        marcadorDestino =  mMap.addMarker(new MarkerOptions()
+                .position(localizacao)
+                .title(titulo)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.destino)));
     }
 
     private void adicionarMarcadorPassageiro(LatLng localizacao, String titulo)
@@ -218,8 +254,8 @@ public class CorridaActivity extends AppCompatActivity implements OnMapReadyCall
                                 lon = String.valueOf(localMotorista.longitude);
                                 break;
                             case Requisicao.STATUS_VIAGEM:
-                                /*lat = String.valueOf(destino);
-                                lon = String.valueOf(localMotorista.longitude);*/
+                                lat = destino.getLatitude();
+                                lon = destino.getLongitude();
                                 break;
 
                         }
